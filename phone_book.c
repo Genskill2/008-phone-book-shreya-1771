@@ -32,6 +32,7 @@ void free_entries(entry *); // TBD Given the first node of a linked list of entr
 
 void write_all_entries(entry *); // Given the first node of a linked list of entries, will delete the database file on the disk and save the given entries into the file 
 
+
 int main(int argc, char *argv[]) 
 {
     if(argc == 1) 
@@ -39,13 +40,15 @@ int main(int argc, char *argv[])
         print_usage("Insufficient arguments", argv[0]);
         exit(1);
     } 
-if(strcmp(argv[1], "add") == 0) 
+
+    if(strcmp(argv[1], "add") == 0) 
     {   /* Handle add */
         if(argc != 4) 
         {
             print_usage("Improper arguments for add", argv[0]);
             exit(1);
         }
+    
         char *name = argv[2];
         char *phone = argv[3];
         add(name, phone);
@@ -58,7 +61,8 @@ if(strcmp(argv[1], "add") == 0)
             print_usage("Improper arguments for list", argv[0]);
             exit(1);
         }
-      FILE *fp = open_db_file();
+    
+        FILE *fp = open_db_file();
         list(fp);
         fclose(fp);
         exit(0);
@@ -70,6 +74,7 @@ if(strcmp(argv[1], "add") == 0)
             print_usage("Improper arguments for search",argv[0]);
             exit(1);
         }
+
         FILE *fp = open_db_file();
         char *name = argv[2];
         if(search(fp, name) == 0) 
@@ -86,7 +91,8 @@ if(strcmp(argv[1], "add") == 0)
         if(argc != 3) 
         {
             print_usage("Improper arguments for delete", argv[0]);
-            exit(1); }
+            exit(1);
+        }
         FILE *fp = open_db_file();
         char *name = argv[2];
         if(delete(fp, name) == 0) 
@@ -102,7 +108,9 @@ if(strcmp(argv[1], "add") == 0)
     {
         print_usage("Invalid command", argv[0]);
         exit(1);
-    } }
+    }
+}
+
 FILE *open_db_file() 
 {
     FILE *fp=fopen(DB, "r");
@@ -112,7 +120,8 @@ FILE *open_db_file()
         exit(1);
     }
     return fp;
-}  
+}
+  
 void free_entries(entry *p) 
 {
     entry *del = NULL;
@@ -124,6 +133,7 @@ void free_entries(entry *p)
         free(del);
     }
 }
+
 void print_usage(char *message, char *progname) 
 {
     printf("Error : %s\n", message);
@@ -138,6 +148,7 @@ void print_usage(char *message, char *progname)
     printf("delete name\n");
     printf("    Deletes the entry for the name in the database.\n    Prints 'no match' if there's no such name.\n");
 }
+
 entry * create_entry_node(char *name, char *phone) 
 {
     entry *ret;
@@ -147,6 +158,8 @@ entry * create_entry_node(char *name, char *phone)
     ret->next = NULL;
     return ret;
 }
+
+
 entry *load_entries(FILE *fp) 
 {
     char name[20], phone[20];
@@ -183,6 +196,7 @@ entry *load_entries(FILE *fp)
     }
     return ret;
 }
+
 void write_all_entries(entry * p) 
 {
     FILE *fp = fopen(DB, "w");
@@ -192,14 +206,13 @@ void write_all_entries(entry * p)
         p = p->next;
     }
     fclose(fp);
-
+}
 void add(char *name, char *phone) 
 {
     FILE *fp = fopen(DB, "a");
     fprintf(fp, "%s,%s\n", name, phone);
     fclose(fp);
 }
-
 void list(FILE *db_file) 
 {
     int count = 0;
@@ -217,8 +230,6 @@ void list(FILE *db_file)
 
     free_entries(base);
 }
-
-
 int delete(FILE *db_file, char *name) 
 {
     entry *p = load_entries(db_file);
